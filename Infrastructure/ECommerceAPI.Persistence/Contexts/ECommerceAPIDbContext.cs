@@ -19,8 +19,7 @@ namespace ECommerceAPI.Persistence.Contexts
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
-            var datas = ChangeTracker
-                .Entries<BaseEntity>();
+            var datas = ChangeTracker.Entries<BaseEntity>();
                 
             foreach (var data in datas)
             {
