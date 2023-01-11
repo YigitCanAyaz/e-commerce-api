@@ -24,7 +24,13 @@ namespace ECommerceAPI.API.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            return Ok(_productReadRepository.GetAll());
+            return Ok(_productReadRepository.GetAll(false));
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Get(string id)
+        {
+            return Ok(await _productReadRepository.GetByIdAsync(id, false));
         }
 
         [HttpPost]
@@ -40,6 +46,29 @@ namespace ECommerceAPI.API.Controllers
             await _productWriteRepository.SaveAsync();
 
             return StatusCode((int)HttpStatusCode.Created);
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> Put(VM_Product_Update model)
+        {
+            Product product = await _productReadRepository.GetByIdAsync(model.Id);
+
+            product.Stock = model.Stock;
+            product.Name = model.Name;
+            product.Price = model.Price;
+
+            await _productWriteRepository.SaveAsync();
+
+            return Ok();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(string id)
+        {
+            await _productWriteRepository.RemoveAsync(id);
+            await _productWriteRepository.SaveAsync();
+
+            return Ok();
         }
     }
 }
